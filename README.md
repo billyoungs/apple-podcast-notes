@@ -201,7 +201,6 @@ apple-podcast-notes/
 │   ├── transcribe.py          转录（阿里云百炼 qwen/funasr/paraformer + SenseAudio + 通用 api）
 │   └── make_notes.py          用任意 OpenAI 兼容 LLM 写笔记
 ├── templates/                 五套模板（财经、科技商业、访谈、知识科普、通用）
-├── examples/                  两期真实成品笔记
 ├── saved-notes/               生成的笔记默认保存到这里（若智能体指定了项目工作文件夹则优先存入项目文件夹）
 └── README.md                  本文件
 ```

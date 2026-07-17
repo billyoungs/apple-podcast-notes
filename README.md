@@ -3,7 +3,7 @@
 > Apple Podcasts 笔记生成器 · 一个 AI 智能体技能  
 > 把你的 Apple Podcasts 单集链接变成结构化 Markdown 笔记，自动转录 + 自动分类 + 自动套模板。
 
-给 AI 助手（Claude Code / Codex 等支持 `SKILL.md` 的智能体）用的技能。用户只需给出一个 Apple Podcasts 链接，智能体就会自动完成 **解析链接 → 获取 shownotes → 转录音频 → 判断内容类型 → 套用模板 → 输出笔记** 的完整工作流。
+给 AI 智能体（Claude Code / Codex / OpenClaw 等海外及 WorkBuddy / DuMate / LobsterAI / QwenPaw 等国产智能体工作台）用的技能。用户只需给出一个 Apple Podcasts 链接，智能体就会自动完成 **解析链接 → 获取 shownotes → 转录音频 → 判断内容类型 → 套用模板 → 输出笔记** 的完整工作流。
 
 ---
 
@@ -11,7 +11,7 @@
 
 ### 让智能体自己装（推荐）
 
-把这个仓库交给你的 AI 助手，告诉它：
+把这个仓库交给你的 AI 智能体（Claude Code / Codex / OpenClaw / WorkBuddy / DuMate / LobsterAI / QwenPaw 等），告诉它：
 
 > 安装 apple-podcast-notes 技能，仓库在 `https://github.com/billyoungs/apple-podcast-notes`
 
@@ -202,7 +202,7 @@ apple-podcast-notes/
 │   └── make_notes.py          用任意 OpenAI 兼容 LLM 写笔记
 ├── templates/                 五套模板（财经、科技商业、访谈、知识科普、通用）
 ├── examples/                  两期真实成品笔记
-├── saved-notes/               生成的笔记默认保存到这里
+├── saved-notes/               生成的笔记默认保存到这里（若智能体指定了项目工作文件夹则优先存入项目文件夹）
 └── README.md                  本文件
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: apple-podcast-notes
-description: 把 Apple Podcasts 单集播客转成结构化的 Markdown 笔记。工作流为：解析 Apple Podcasts 单集链接 → 拿到音频直链、shownotes、章节 → 转录音频 → 判断内容类型（财经/科技商业/人物访谈/知识科普/通用）→ 套用对应的笔记模板 → 输出 .md 笔记文件。只要用户给出 Apple Podcasts 链接（podcasts.apple.com/...）、或提到"把这期播客整理成笔记""转录播客""生成播客笔记""播客总结/逐字稿/shownotes 整理"，就使用本技能；即便用户没说"skill"二字也应触发。也支持用户已自备音频文件或转录文本，只需生成笔记的场景。
+description: 把 Apple Podcasts 单集播客转成结构化的 Markdown 笔记。工作流为：解析 Apple Podcasts 单集链接 → 拿到音频直链、shownotes、章节 → 转录音频 → 判断内容类型（财经/科技商业/人物访谈/知识科普/通用）→ 套用对应的笔记模板 → 输出 .md 笔记文件。成品优先存入智能体的项目工作文件夹，否则存入默认的 saved-notes/。只要用户给出 Apple Podcasts 链接（podcasts.apple.com/...）、或提到"把这期播客整理成笔记""转录播客""生成播客笔记""播客总结/逐字稿/shownotes 整理"，就使用本技能；即便用户没说"skill"二字也应触发。也支持用户已自备音频文件或转录文本，只需生成笔记的场景。
 ---
 
 # Apple Podcasts 笔记生成器
@@ -141,7 +141,7 @@ python scripts/transcribe.py --from-meta ./_work --out ./_work --fallback parafo
 
 ## 第 5 步：输出
 
-保存**两个成品文件**到技能目录下的 `saved-notes/` 子目录（`~/.claude/skills/apple-podcast-notes/saved-notes/`）：
+保存**两个成品文件**（优先存入智能体当前的项目工作文件夹；若智能体未指定项目工作文件夹，则存入技能默认的 `saved-notes/` 子目录，即 `~/.claude/skills/apple-podcast-notes/saved-notes/`）：
 1. `<播客名>-<集标题>-笔记.md`（文件名去掉非法字符）。
 2. `<播客名>-<集标题>-逐字稿.txt` —— 把 `_work/transcript.txt`（有说话人分离则含 `【说话人N】`）复制/另存为成品一并留档，方便日后回查原文、核对细节。
 

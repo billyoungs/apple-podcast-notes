@@ -81,7 +81,7 @@ export DASHSCOPE_API_KEY="sk-你的key"
 
 ---
 
-### ▌ 方案 B：声网 SenseAudio（备选，OpenAI 兼容）
+### ▌ 方案 B：SenseAudio（备选，OpenAI 兼容）
 
 - 官网：https://senseaudio.cn/
 - 注册即用，无需实名认证，API 兼容 OpenAI 格式

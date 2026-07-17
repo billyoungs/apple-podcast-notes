@@ -1,16 +1,27 @@
 # apple-podcast-notes
 
-> Apple Podcasts 笔记生成器 · Turn an Apple Podcasts episode into structured Markdown notes — a Claude skill with multiple ASR backends.
+> Apple Podcasts 笔记生成器 · 一个 AI 智能体技能  
+> 把你的 Apple Podcasts 单集链接变成结构化 Markdown 笔记，自动转录 + 自动分类 + 自动套模板。
 
-把 Apple Podcasts 单集播客转成结构化 Markdown 笔记。适配 Claude Code / Codex / OpenClaw 等能读 SKILL.md + 跑 Python 的环境。
+给 AI 助手（Claude Code / Codex 等支持 `SKILL.md` 的智能体）用的技能。用户只需给出一个 Apple Podcasts 链接，智能体就会自动完成 **解析链接 → 获取 shownotes → 转录音频 → 判断内容类型 → 套用模板 → 输出笔记** 的完整工作流。
 
 ---
 
-## 📦 安装
+## 安装
+
+### 让智能体自己装（推荐）
+
+把这个仓库交给你的 AI 助手，告诉它：
+
+> 安装 apple-podcast-notes 技能，仓库在 `https://github.com/billyoungs/apple-podcast-notes`
+
+智能体会自动把技能文件放到正确位置，后续即可使用。
+
+### 或者手动克隆
 
 ```bash
-# 把整个文件夹放进 Claude Code 的技能目录
-cp -r apple-podcast-notes ~/.claude/skills/
+git clone https://github.com/billyoungs/apple-podcast-notes.git
+# 然后把仓库路径告诉 AI 助手即可
 ```
 
 ---
@@ -98,17 +109,6 @@ export ASR_MODEL="senseaudio-asr-lite-1.5-260319"
 
 > 价格对比：SenseAudio Lite（0.9 元/小时）≈ **paraformer 的一半**，一期 90 分钟约 ¥1.35。无需预存大额费用，按量计费。
 
-**使用方式（需先下载音频到本地）：**
-
-```bash
-# 先下载音频
-python scripts/fetch_episode.py "<Apple Podcasts 链接>" --out ./_work --download
-
-# 用 senseaudio 后端
-python scripts/transcribe.py ./_work/audio.m4a --out ./_work --backend senseaudio \
-  --model senseaudio-asr-lite-1.5-260319 --language zh
-```
-
 ---
 
 ### ▌ 快速决策：我该选哪个？
@@ -125,7 +125,21 @@ python scripts/transcribe.py ./_work/audio.m4a --out ./_work --backend senseaudi
 
 ## 🚀 快速上手
 
-### 完整流程（5 步）
+### 一句话让智能体干活
+
+安装好技能并配好转录 API Key 后，把 Apple Podcasts 链接交给 AI 助手：
+
+> 把这期 Apple Podcasts 整理成笔记：[播客链接]
+
+它会自动：**解析链接 → 拿转录 → 判类型 → 套模板 → 输出笔记文件**。
+
+你也可以指定模板类型：
+
+> 把这期 Apple Podcasts 整理成笔记：[链接] （财经类）
+
+### 手动分步流程
+
+如果你已自备音频或只想跑其中某一步：
 
 ```bash
 # 1️⃣ 解析 Apple Podcasts 链接，获取元数据和音频
@@ -135,12 +149,8 @@ python scripts/fetch_episode.py "<Apple Podcasts 链接>" --out ./_work
 # 阿里云百炼 paraformer（推荐，省钱）：
 python scripts/transcribe.py --from-meta ./_work --out ./_work --backend paraformer --diarize --speaker-count 2 --language zh
 
-# 或 SenseAudio（需先下载）：
-python scripts/fetch_episode.py "<链接>" --out ./_work --download
-python scripts/transcribe.py ./_work/audio.m4a --out ./_work --backend senseaudio --model senseaudio-asr-lite-1.5-260319 --language zh
-
-# 3️⃣ 把转录结果交给 Claude 生成笔记（详见下方用法一）
-#    或 用任意 LLM 生成（详见用法二）
+# 3️⃣ 用任意 LLM（DeepSeek / 通义 / Kimi / GPT 等）离线生成笔记
+python scripts/make_notes.py --work ./_work --type auto --out ./笔记.md
 ```
 
 ### 自动降级（阿里云百炼专用）
@@ -156,16 +166,7 @@ python scripts/transcribe.py --from-meta ./_work --out ./_work \
 
 ---
 
-## 📖 用法一：交给 Claude（推荐，最完整）
-
-装好后直接说，例如：
-
-> 把这期 Apple Podcasts 整理成笔记：https://podcasts.apple.com/.../id123?i=456 （科技类）
-
-Claude 会：解析链接 → 拿转录 → 判类型 → 套模板 → 输出笔记。
-这条路的好处：Claude 能联网核实股票代码、读图表，最完整。
-
-## 📖 用法二：用任意 LLM 写笔记（不绑定 Claude）
+## 📖 用任意 LLM 写笔记（不绑定 Claude）
 
 `make_notes.py` 走 OpenAI 兼容接口，DeepSeek / 通义千问 / Kimi / GPT / 智谱 GLM 等都行：
 
@@ -194,7 +195,7 @@ python scripts/make_notes.py --work ./_work --type knowledge --dump-prompt
 
 ```
 apple-podcast-notes/
-├── SKILL.md                   流程说明（技能主文件）
+├── SKILL.md                   流程说明（技能主文件，AI 智能体读取它来工作）
 ├── scripts/
 │   ├── fetch_episode.py       解析 Apple Podcasts 链接、下载音频、取 shownotes
 │   ├── transcribe.py          转录（阿里云百炼 qwen/funasr/paraformer + SenseAudio + 通用 api）

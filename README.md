@@ -162,6 +162,16 @@ python scripts/transcribe.py --from-meta ./_work --out ./_work \
   --fallback paraformer,funasr,qwen --diarize --speaker-count 2 --language zh
 ```
 
+> ⚠️ **费用提示**：当 `paraformer` 额度用尽、自动降级到 `funasr` 时，脚本会**暂停并提示费用风险**，要求你加 `--confirm-funasr` 参数确认后才能继续。这是因为 fun-asr 无法启用「免费额度用完即停」机制，使用即按量计费（0.00022 元/秒）。确认的方式：
+>
+> ```bash
+> python scripts/transcribe.py --from-meta ./_work --out ./_work \
+>   --fallback paraformer,funasr,qwen --confirm-funasr \
+>   --diarize --speaker-count 2 --language zh
+> ```
+>
+> 若你直接选 `--backend funasr` 则无需确认（已为主动选择）。
+
 > qwen 不支持说话人分离，若降级到它则该期不带 `【说话人N】` 标注。
 
 ---

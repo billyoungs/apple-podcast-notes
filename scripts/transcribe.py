@@ -367,6 +367,8 @@ def main():
     ap.add_argument("--speaker-count", type=int, default=None, help="说话人数量提示(2-100)")
     ap.add_argument("--vocabulary-id", default=None, help="热词表ID(vocabulary_id)，funasr/paraformer 支持")
     ap.add_argument("--hotwords", default=None, help="热词（逗号分隔），senseaudio 支持")
+    ap.add_argument("--confirm-funasr", action="store_true",
+                    help="确认使用 fun-asr 模型（可能产生费用），绕过确认提示")
     ap.add_argument("--fallback", default=None,
                     help="自动降级：给一串后端顺序（逗号分隔，如 paraformer,funasr,qwen），"
                          "某个额度用尽/欠费时自动换下一个重试；其它错误不切、直接报错。设置后覆盖 --backend。")
@@ -423,6 +425,17 @@ def main():
         try:
             if len(chain) > 1:
                 print(f"[后端 {i+1}/{len(chain)}] 尝试 {backend} ...")
+            # 如果 funasr 是通过降级链进入的（非首选），且用户未显式确认，则暂停询问
+            if backend == "funasr" and i > 0 and not args.confirm_funasr:
+                print("\n[需要确认] 首选模型（paraformer）额度已用尽/欠费，")
+                print("           下一步将切换到 fun-asr 模型用于转录。")
+                print("           ═══════════════════════════════════════")
+                print("           ⚠️ fun-asr 无法启用「免费额度用完即停」,")
+                print("             续用将按 0.00022 元/秒按量计费。")
+                print("             免费额度用完后不会自动停止，可能产生费用。")
+                print("           ═══════════════════════════════════════")
+                print(f"   如需继续，请加 --confirm-funasr 参数重新运行。")
+                sys.exit(1)
             _run(backend)
             return  # 成功即结束
         except QuotaExhausted as e:

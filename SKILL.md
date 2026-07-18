@@ -92,6 +92,10 @@ python scripts/transcribe.py --from-meta ./_work --out ./_work --backend parafor
 python scripts/transcribe.py --from-meta ./_work --out ./_work --fallback paraformer,funasr,qwen --diarize --speaker-count 2 --language zh
 ```
 
+> ⚠️ 降级到 `funasr` 时脚本会**暂停并要求确认**（需加 `--confirm-funasr`），因为 fun-asr 无法启用免费额度用完即停，续用即按量计费。若用户同意，即在命令中追加 `--confirm-funasr` 参数。如果用户不同意，则告知转录失败，请有收益保障后再试。
+>
+> 若直接选 `--backend funasr` 则无需确认（已为主动选择）。
+
 （注：qwen 不支持说话人分离，若降级到它则该期无 `【说话人N】`。）
 
 产物：`./_work/transcript.txt`（纯文本）与 `./_work/transcript.srt`（带时间戳）。

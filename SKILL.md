@@ -1,6 +1,6 @@
 ---
 name: apple-podcast-notes
-version: 1.00
+version: 1.0.0
 description: 把 Apple Podcasts 单集播客转成结构化的 Markdown 笔记。工作流为：解析 Apple Podcasts 单集链接 → 拿到音频直链、shownotes、章节 → 转录音频 → 判断内容类型（财经/科技商业/人物访谈/知识科普/通用）→ 套用对应的笔记模板 → 输出 .md 笔记文件。成品优先存入智能体的项目工作文件夹，否则存入默认的 saved-notes/。只要用户给出 Apple Podcasts 链接（podcasts.apple.com/...）、或提到"把这期播客整理成笔记""转录播客""生成播客笔记""播客总结/逐字稿/shownotes 整理"，就使用本技能；即便用户没说"skill"二字也应触发。也支持用户已自备音频文件或转录文本，只需生成笔记的场景。
 ---
 

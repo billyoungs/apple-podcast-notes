@@ -2,7 +2,7 @@
 
 > Apple Podcasts 笔记生成器 · 一个 AI 智能体技能  
 > 把你的 Apple Podcasts 单集链接变成结构化 Markdown 笔记，自动转录 + 自动分类 + 自动套模板。  
-> **版本：v1.00**（迭代规则：每次更新递增 0.01，与 git tag 对应）
+> **版本：v1.0.0**（遵循语义化版本 SemVer：补丁位每次 +0.0.1，新增功能升次版本，不兼容变更升主版本）
 
 给 AI 智能体（Claude Code / Codex / OpenClaw 等海外及 WorkBuddy / DuMate / LobsterAI / QwenPaw 等国产智能体工作台）用的技能。用户只需给出一个 Apple Podcasts 链接，智能体就会自动完成 **解析链接 → 获取 shownotes → 转录音频 → 判断内容类型 → 套用模板 → 输出笔记** 的完整工作流。
 

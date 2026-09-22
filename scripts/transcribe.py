@@ -6,6 +6,8 @@ transcribe.py — 把音频转成文字。支持多种后端：
   qwen      (模型 qwen3-asr-flash-filetrans，单人口播、长音频)
       export DASHSCOPE_API_KEY="sk-xxx"
       python transcribe.py --from-meta ./_work --out ./_work --backend qwen [--region cn|intl]
+      # 可选：export DASHSCOPE_BASE_URL="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com"
+      # （业务空间专属域名，官方推荐；不设则用 dashscope 公共域名）
 
   funasr    (模型 fun-asr，对谈型：说话人分离 + 热词)
   paraformer(模型 paraformer-v2，便宜 + 说话人分离 + 每月免费 10h)
@@ -85,6 +87,19 @@ def _http_json(url, headers, data=None, method=None, timeout=60):
 
 # ---------- DashScope 异步任务：提交 / 轮询 / 解析（qwen 与 funasr 共用） ----------
 def _dashscope_urls(region):
+    """返回 (提交URL, 任务查询base)。
+
+    优先读环境变量 DASHSCOPE_BASE_URL（业务空间专属域名，形如
+    https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com，见官方通知
+    https://help.aliyun.com/zh/model-studio/regions 迁移说明）；
+    未设置则回退 DashScope 公共域名（存量业务仍可调用，但自
+    2026-09-30 起不再支持新特性）。
+    注意：专属域名鉴权只能访问创建它的业务空间，API Key 须属于该空间。
+    """
+    custom = os.environ.get("DASHSCOPE_BASE_URL", "").rstrip("/")
+    if custom:
+        return (f"{custom}/api/v1/services/audio/asr/transcription",
+                f"{custom}/api/v1/tasks/")
     if region == "intl":
         return ("https://dashscope-intl.aliyuncs.com/api/v1/services/audio/asr/transcription",
                 "https://dashscope-intl.aliyuncs.com/api/v1/tasks/")

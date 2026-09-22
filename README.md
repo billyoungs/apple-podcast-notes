@@ -2,7 +2,7 @@
 
 > Apple Podcasts 笔记生成器 · 一个 AI 智能体技能  
 > 把你的 Apple Podcasts 单集链接变成结构化 Markdown 笔记，自动转录 + 自动分类 + 自动套模板。  
-> **版本：v1.0.1**（遵循语义化版本 SemVer：补丁位每次 +0.0.1，新增功能升次版本，不兼容变更升主版本）
+> **版本：v1.0.2**（语义化版本 SemVer：常规修改补丁位 +0.0.1；任一位达到 5 后向上进位，如 1.0.5 之后是 1.1.0）
 
 给 AI 智能体（Claude Code / Codex / OpenClaw 等海外及 WorkBuddy / DuMate / LobsterAI / QwenPaw 等国产智能体工作台）用的技能。用户只需给出一个 Apple Podcasts 链接，智能体就会自动完成 **解析链接 → 获取 shownotes → 转录音频 → 判断内容类型 → 套用模板 → 输出笔记** 的完整工作流。
 
@@ -62,6 +62,17 @@ git clone https://github.com/billyoungs/apple-podcast-notes.git
 export DASHSCOPE_API_KEY="sk-你的key"
 # ③ 想永久生效：把上面这行加到 ~/.bashrc 或 ~/.zshrc，再 source ~/.zshrc
 ```
+
+**可选：迁移到业务空间专属域名（百炼 2026-09 通知）**
+
+`dashscope.aliyuncs.com` 公共域名存量业务仍可调用，但自 **2026-09-30 起不再支持新特性**。官方推荐迁移到业务空间专属域名，只需设置环境变量、无需改代码：
+
+```bash
+# 在百炼控制台「业务空间管理」或 API Key 创建弹窗中复制 API Host
+export DASHSCOPE_BASE_URL="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com"
+```
+
+> 注意：专属域名的 API Key 只能访问创建它的业务空间；迁移后请求超时从 600 秒提升到 3600 秒，对长音频转写更友好。详见[官方迁移说明](https://help.aliyun.com/zh/model-studio/regions)。
 
 **支持的模型与价格：**
 
@@ -225,6 +236,9 @@ apple-podcast-notes/
 export DASHSCOPE_API_KEY="sk-你复制的key"
 
 # 永久生效：把上面这行加进 ~/.bashrc 或 ~/.zshrc，再 source ~/.zshrc
+
+# 可选：业务空间专属域名（推荐，见上文「迁移到业务空间专属域名」）
+export DASHSCOPE_BASE_URL="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com"
 ```
 
 ### 验证是否配置成功
@@ -236,6 +250,7 @@ echo $DASHSCOPE_API_KEY
 ### 常见报错
 - `缺配置 DASHSCOPE_API_KEY`：环境变量没设或没在同一个终端，检查 `echo $DASHSCOPE_API_KEY` 是否有输出。
 - 提交后一直 FAILED：多为音频 URL 不可公网访问、或地域与 Key 不匹配（北京 Key 配了 intl，或反之）。
+- 设了 `DASHSCOPE_BASE_URL` 后报 401/403：专属域名的 API Key 只能访问创建它的业务空间，确认 Key 与域名属于同一业务空间，或暂时取消该环境变量回退公共域名。
 - **报"未解析出文本"但任务其实成功了**：脚本会存 `./_work/dashscope_raw_result.json`。用恢复模式重新解析、**不重复计费**：
   ```bash
   python scripts/transcribe.py --from-raw ./_work/dashscope_raw_result.json --out ./_work

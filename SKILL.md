@@ -1,6 +1,6 @@
 ---
 name: apple-podcast-notes
-version: "1.0.1"
+version: "1.0.2"
 metadata:
   author: Bill Yang
 description: 把 Apple Podcasts 单集播客转成结构化的 Markdown 笔记。工作流为：解析 Apple Podcasts 单集链接 → 拿到音频直链、shownotes、章节 → 转录音频 → 判断内容类型（财经/科技商业/人物访谈/知识科普/通用）→ 套用对应的笔记模板 → 输出 .md 笔记文件。成品优先存入智能体的项目工作文件夹，否则存入默认的 saved-notes/。只要用户给出 Apple Podcasts 链接（podcasts.apple.com/...）、或提到"把这期播客整理成笔记""转录播客""生成播客笔记""播客总结/逐字稿/shownotes 整理"，就使用本技能；即便用户没说"skill"二字也应触发。也支持用户已自备音频文件或转录文本，只需生成笔记的场景。
@@ -66,6 +66,9 @@ python scripts/transcribe.py --from-meta ./_work --out ./_work --backend qwen --
 ```
 
 > `--from-meta ./_work` 让脚本自己去读 meta.json 里的 audio_url，无需手动传链接（bash 和 PowerShell 都一样，避免引号/续行问题）。
+>
+> **域名说明（百炼 2026-09 通知）**：默认走 `dashscope.aliyuncs.com` 公共域名（存量业务仍可用，但 2026-09-30 起不再支持新特性）。官方推荐迁移到业务空间专属域名，设置环境变量即可，无需改代码：
+> `export DASHSCOPE_BASE_URL="https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com"`（API Key 须属于该业务空间；专属域名请求超时更长，对长音频转写有利。）
 
 **①b 对谈型播客（多人）建议改用 fun-asr 开说话人分离**：能给每句标 `【说话人N】`，主播/嘉宾观点不混淆，配合 finance.md 的"对谈型"分支和 interview 模板更好。开分离时音频建议 ≤2 小时、仅单声道：
 
